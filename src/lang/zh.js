@@ -27,7 +27,7 @@ export default {
     logout: '退出登录'
   },
   login: {
-    title: 'Trojan Panel',
+    title: 'X Panel',
     logIn: '登录',
     username: '账号',
     password: '密码',

@@ -27,7 +27,7 @@ export default {
     logout: '로그아웃'
   },
   login: {
-    title: 'Trojan Panel',
+    title: 'X Panel',
     logIn: '로그인',
     username: '계정',
     password: '비밀번호',

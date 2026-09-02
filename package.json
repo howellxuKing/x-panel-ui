@@ -2,7 +2,7 @@
   "name": "trojan-panel",
   "version": "1.0.0",
   "private": true,
-  "description": "Trojan Panel UI",
+  "description": "X Panel UI",
   "author": "jonssonyan <https://jonssonyan.com>",
   "scripts": {
     "serve": "vue-cli-service serve",

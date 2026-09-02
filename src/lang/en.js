@@ -27,7 +27,7 @@ export default {
     logout: 'Log Out'
   },
   login: {
-    title: 'Trojan Panel',
+    title: 'X Panel',
     logIn: 'Login',
     username: 'Username',
     password: 'Password',

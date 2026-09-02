@@ -35,20 +35,6 @@
               </span>
             </el-dropdown-item>
           </router-link>
-          <a
-            target="_blank"
-            href="https://github.com/trojanpanel"
-            v-if="checkPermission(['sysadmin', 'admin'])"
-          >
-            <el-dropdown-item>{{ $t('navbar.github') }}</el-dropdown-item>
-          </a>
-          <a
-            target="_blank"
-            href="https://trojanpanel.github.io"
-            v-if="checkPermission(['sysadmin', 'admin'])"
-          >
-            <el-dropdown-item>{{ $t('navbar.doc') }}</el-dropdown-item>
-          </a>
           <el-dropdown-item divided @click.native="logout">
             <span style="display: block">{{ $t('navbar.logout') }}</span>
           </el-dropdown-item>
