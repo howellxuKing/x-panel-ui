@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-editor-container">
-    <panel-group :group-data="panelGroupData" />
+    <panel-group :group-data="panelGroupData" @edit="openEdit" />
     <el-row :gutter="8">
       <el-col
         :xs="{ span: 24 }"
@@ -35,6 +35,35 @@
       >
       </el-col>
     </el-row>
+
+    <el-dialog :title="$t('table.edit')" :visible.sync="editVisible" width="420px">
+      <el-form label-width="110px">
+        <el-form-item :label="$t('table.editQuota')">
+          <el-input-number
+            v-model.number="editForm.quota"
+            controls-position="right"
+            style="width: 100%"
+          />
+          <div class="edit-tips">{{ $t('dashboard.quotaTips') }}</div>
+        </el-form-item>
+        <el-form-item :label="$t('table.expireTime')">
+          <el-date-picker
+            v-model="editForm.expireTime"
+            type="datetime"
+            value-format="timestamp"
+            style="width: 100%"
+          />
+        </el-form-item>
+      </el-form>
+      <div slot="footer">
+        <el-button @click="editVisible = false">{{
+          $t('table.cancel')
+        }}</el-button>
+        <el-button type="primary" @click="submitEdit">{{
+          $t('table.confirm')
+        }}</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -42,6 +71,12 @@
 import PanelGroup from '@/views/dashboard/admin/compoments/PanelGroup.vue'
 import TrafficTable from '@/views/dashboard/admin/compoments/TrafficTable'
 import { panelGroup } from '@/api/dashboard'
+import {
+  getAccountInfo,
+  selectAccountById,
+  updateAccountById
+} from '@/api/account'
+import { byteToMb } from '@/utils/account'
 
 export default {
   name: 'Admin',
@@ -51,6 +86,16 @@ export default {
   },
   data() {
     return {
+      editVisible: false,
+      editForm: {
+        id: 0,
+        quota: 0,
+        expireTime: '',
+        username: '',
+        roleId: 2,
+        deleted: 0,
+        email: ''
+      },
       panelGroupData: {
         totalFlow: 0,
         residualFlow: 0,
@@ -64,10 +109,44 @@ export default {
     }
   },
   created() {
-    panelGroup().then((response) => {
-      const { data } = response
-      this.panelGroupData = data
-    })
+    this.getPanelGroup()
+  },
+  methods: {
+    getPanelGroup() {
+      panelGroup().then((response) => {
+        this.panelGroupData = response.data
+      })
+    },
+    openEdit() {
+      getAccountInfo().then((response) => {
+        const id = response.data.id
+        selectAccountById({ id }).then((resp) => {
+          const account = resp.data
+          this.editForm = {
+            id: account.id,
+            username: account.username,
+            roleId: account.roleId,
+            deleted: account.deleted,
+            email: account.email,
+            quota: byteToMb(account.quota),
+            expireTime: account.expireTime
+          }
+          this.editVisible = true
+        })
+      })
+    },
+    submitEdit() {
+      updateAccountById(this.editForm).then(() => {
+        this.editVisible = false
+        this.getPanelGroup()
+        this.$notify({
+          title: 'Success',
+          message: this.$t('confirm.modifySuccess'),
+          type: 'success',
+          duration: 2000
+        })
+      })
+    }
   }
 }
 </script>
@@ -77,6 +156,13 @@ export default {
   padding: 32px;
   background-color: rgb(240, 242, 245);
   position: relative;
+
+  .edit-tips {
+    font-size: 12px;
+    color: #909399;
+    line-height: 18px;
+    margin-top: 4px;
+  }
 
   .github-corner {
     position: absolute;

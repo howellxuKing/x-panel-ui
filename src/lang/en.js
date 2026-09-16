@@ -187,6 +187,7 @@ export default {
     nodeCount: 'Node Count',
     onLine: 'OnLine',
     residualFlow: 'Residual Flow',
+    quotaTips: 'Total traffic in MB; -1 means unlimited',
     quota: 'Quota',
     accountCount: 'Account Count',
     unlimited: 'UnLimited',

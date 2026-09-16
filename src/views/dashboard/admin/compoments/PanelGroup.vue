@@ -77,6 +77,11 @@
         <div class="card-panel-icon-wrapper icon-flow">
           <svg-icon icon-class="flow" class-name="card-panel-icon" />
         </div>
+        <i
+          class="el-icon-edit card-edit"
+          :title="$t('table.edit')"
+          @click.stop="$emit('edit')"
+        />
         <div class="card-panel-description">
           <div class="card-panel-text">{{ $t('dashboard.residualFlow') }}</div>
           <h3 :style="residualFlowStyle">{{ residualFlow }}</h3>
@@ -88,6 +93,11 @@
         <div class="card-panel-icon-wrapper icon-time">
           <svg-icon icon-class="time" class-name="card-panel-icon" />
         </div>
+        <i
+          class="el-icon-edit card-edit"
+          :title="$t('table.edit')"
+          @click.stop="$emit('edit')"
+        />
         <div class="card-panel-description">
           <div class="card-panel-text">{{ $t('dashboard.expireTime') }}</div>
           <h3 :style="expireTimeStyle">
@@ -151,6 +161,20 @@ export default {
 <style lang="scss" scoped>
 .panel-group {
   margin-top: 18px;
+
+  .card-edit {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    z-index: 2;
+    font-size: 15px;
+    color: #409eff;
+    cursor: pointer;
+
+    &:hover {
+      color: #66b1ff;
+    }
+  }
 
   .card-panel-col {
     margin-bottom: 32px;
