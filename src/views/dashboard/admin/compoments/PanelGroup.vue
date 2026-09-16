@@ -66,6 +66,11 @@
         <div class="card-panel-icon-wrapper icon-flow">
           <svg-icon icon-class="flow" class-name="card-panel-icon" />
         </div>
+        <i
+          class="el-icon-edit card-edit"
+          :title="$t('table.edit')"
+          @click.stop="$emit('edit')"
+        />
         <div class="card-panel-description">
           <div class="card-panel-text">{{ $t('dashboard.quota') }}</div>
           <h3>{{ quota }}</h3>

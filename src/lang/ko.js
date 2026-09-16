@@ -187,7 +187,7 @@ export default {
     nodeCount: '총 노드 수',
     onLine: '온라인 사용자 수',
     residualFlow: '잔류 흐름',
-    quotaTips: '총 트래픽(MB), -1은 무제한',
+    quotaTips: '단위: GB, -1은 무제한, 한쪽을 수정하면 다른 쪽이 자동 계산됩니다',
     quota: '총 흐름',
     accountCount: '총 사용자 수',
     unlimited: '제한 없는',

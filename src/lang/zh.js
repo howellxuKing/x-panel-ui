@@ -187,7 +187,7 @@ export default {
     nodeCount: '节点总数',
     onLine: '在线用户数',
     residualFlow: '剩余流量',
-    quotaTips: '总流量，单位 MB；-1 表示不限流量',
+    quotaTips: '总流量/剩余流量单位 GB，填 -1 表示不限流量；改任一项会自动换算另一项',
     quota: '总流量',
     accountCount: '用户总数',
     unlimited: '无限',

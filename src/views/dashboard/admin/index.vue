@@ -38,11 +38,22 @@
 
     <el-dialog :title="$t('table.edit')" :visible.sync="editVisible" width="420px">
       <el-form label-width="110px">
-        <el-form-item :label="$t('table.editQuota')">
+        <el-form-item :label="$t('dashboard.quota') + ' (GB)'">
           <el-input-number
-            v-model.number="editForm.quota"
+            v-model.number="editForm.quotaGb"
             controls-position="right"
+            :precision="2"
             style="width: 100%"
+            @change="onQuotaGbChange"
+          />
+        </el-form-item>
+        <el-form-item :label="$t('dashboard.residualFlow') + ' (GB)'">
+          <el-input-number
+            v-model.number="editForm.residualGb"
+            controls-position="right"
+            :precision="2"
+            style="width: 100%"
+            @change="onResidualGbChange"
           />
           <div class="edit-tips">{{ $t('dashboard.quotaTips') }}</div>
         </el-form-item>
@@ -76,7 +87,6 @@ import {
   selectAccountById,
   updateAccountById
 } from '@/api/account'
-import { byteToMb } from '@/utils/account'
 
 export default {
   name: 'Admin',
@@ -87,9 +97,11 @@ export default {
   data() {
     return {
       editVisible: false,
+      usedBytes: 0,
       editForm: {
         id: 0,
-        quota: 0,
+        quotaGb: 0,
+        residualGb: 0,
         expireTime: '',
         username: '',
         roleId: 2,
@@ -122,21 +134,62 @@ export default {
         const id = response.data.id
         selectAccountById({ id }).then((resp) => {
           const account = resp.data
+          this.usedBytes = (account.upload || 0) + (account.download || 0)
+          const usedGb = this.toGb(this.usedBytes)
           this.editForm = {
             id: account.id,
             username: account.username,
             roleId: account.roleId,
             deleted: account.deleted,
             email: account.email,
-            quota: byteToMb(account.quota),
-            expireTime: account.expireTime
+            expireTime: account.expireTime,
+            quotaGb: account.quota < 0 ? -1 : this.round2(this.toGb(account.quota)),
+            residualGb:
+              account.quota < 0
+                ? -1
+                : this.round2(this.toGb(account.quota) - usedGb)
           }
           this.editVisible = true
         })
       })
     },
+    toGb(bytes) {
+      return bytes / 1024 / 1024 / 1024
+    },
+    round2(value) {
+      return Math.round(value * 100) / 100
+    },
+    onQuotaGbChange(value) {
+      if (value === null || value === undefined) return
+      if (value < 0) {
+        this.editForm.quotaGb = -1
+        this.editForm.residualGb = -1
+        return
+      }
+      this.editForm.residualGb = this.round2(value - this.toGb(this.usedBytes))
+    },
+    onResidualGbChange(value) {
+      if (value === null || value === undefined) return
+      if (value < 0) {
+        this.editForm.residualGb = -1
+        this.editForm.quotaGb = -1
+        return
+      }
+      this.editForm.quotaGb = this.round2(value + this.toGb(this.usedBytes))
+    },
     submitEdit() {
-      updateAccountById(this.editForm).then(() => {
+      const quotaMb =
+        this.editForm.quotaGb < 0 ? -1 : Math.round(this.editForm.quotaGb * 1024)
+      const payload = {
+        id: this.editForm.id,
+        username: this.editForm.username,
+        roleId: this.editForm.roleId,
+        deleted: this.editForm.deleted,
+        email: this.editForm.email,
+        expireTime: this.editForm.expireTime,
+        quota: quotaMb
+      }
+      updateAccountById(payload).then(() => {
         this.editVisible = false
         this.getPanelGroup()
         this.$notify({
