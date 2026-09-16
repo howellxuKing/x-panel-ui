@@ -50,6 +50,8 @@ export default {
         captchaEnable: 0,
         systemName: '',
         clashRule: '',
+        clashDirectDomains: '',
+        clashProxyDomains: '',
         xrayTemplate: '',
         xrayTemplateEntity: {}
       }

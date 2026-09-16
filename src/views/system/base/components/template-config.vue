@@ -20,6 +20,24 @@
           clearable
         />
       </el-form-item>
+      <el-form-item :label="$t('config.clashDirectDomains')" prop="clashDirectDomains">
+        <el-input
+          type="textarea"
+          :autosize="{ minRows: 2, maxRows: 8 }"
+          v-model="systemConfig.clashDirectDomains"
+          :placeholder="$t('config.clashDomainsTips')"
+          clearable
+        />
+      </el-form-item>
+      <el-form-item :label="$t('config.clashProxyDomains')" prop="clashProxyDomains">
+        <el-input
+          type="textarea"
+          :autosize="{ minRows: 2, maxRows: 8 }"
+          v-model="systemConfig.clashProxyDomains"
+          :placeholder="$t('config.clashDomainsTips')"
+          clearable
+        />
+      </el-form-item>
       <el-form-item :label="$t('config.xrayTemplate')" prop="xrayTemplate">
         <JsonEditorVue
           v-model="systemConfig.xrayTemplateEntity"
@@ -71,6 +89,22 @@ export default {
             min: 0,
             max: 102400,
             message: this.$t('valid.clashRuleRange'),
+            trigger: ['change', 'blur']
+          }
+        ],
+        clashDirectDomains: [
+          {
+            min: 0,
+            max: 10240,
+            message: this.$t('valid.clashDomainsRange'),
+            trigger: ['change', 'blur']
+          }
+        ],
+        clashProxyDomains: [
+          {
+            min: 0,
+            max: 10240,
+            message: this.$t('valid.clashDomainsRange'),
             trigger: ['change', 'blur']
           }
         ],
